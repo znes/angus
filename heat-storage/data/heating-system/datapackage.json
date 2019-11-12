@@ -1,0 +1,57 @@
+{
+    "profile": "tabular-data-package",
+    "resources": [
+ 
+ 	{
+            "path": "heating-system.csv",
+            "profile": "tabular-data-resource",
+            "name": "heating-system",
+            "format": "csv",
+            "mediatype": "text/csv",
+            "encoding": "utf-8",
+            "schema": {
+                "fields": [
+		    {
+                        "name": "plant",
+                        "type": "string",
+                        "format": "default"
+                    },	
+		    {
+                        "name": "parameter",
+                        "type": "string",
+                        "format": "default"
+                    },
+                    {
+                        "name": "unit",
+                        "type": "string",
+                        "format": "default"
+                    },
+            	    {
+                        "name": "value",
+                        "type": "number",
+                        "format": "default"
+                    }
+                ],
+                "missingValues": [
+                    ""
+                ]
+            }
+        }
+      
+    ],
+    "name": "Heating System Data",
+    "description": "Data includes technical data for heating system components such as efficiencies etc.",
+    "contributors": [
+        {
+            "title": "'Simon Hilpert'",
+            "email": "simon.hilpert@uni-flensburg.de",
+            "role": "author"
+        }
+    ],
+    "sources": [
+        {
+            "title": "HS Flensburg",
+            "source": "Direct communication with HS Flensburg"
+        }
+    ]
+}
