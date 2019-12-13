@@ -3,6 +3,8 @@ geometry:
 - margin=2cm
 header-includes:
 - \usepackage{mathtools}
+- \usepackage{tikz}
+- \usetikzlibrary{shapes}
 numbersections: true
 ---
 
@@ -37,6 +39,14 @@ Angus 2 Project Meeting, 12 June 2019 in Leipzig.
 
 
 # Case Study CAES
+
+\begin{tikzpicture}
+\draw
+ (0,0) node [draw](storage){storage}
+ (3,0) node [draw, ellipse](bus){electric bus};
+\draw[->] (storage) -- (bus);
+\draw[->] (bus) -- (storage);
+\end{tikzpicture}
 
 ## First Iteration
 
@@ -94,7 +104,102 @@ the significant deviations a more suitable model is being formulated by WG Tusch
 
 # Case Study HEAT
 
+\begin{tikzpicture}[line width=2, scale=1.6]
+\draw[line width=10] (-.5,-.1) -- (10.5,-.1);
+\draw[line width=10] (-.5,4.1) -- (10.5,4.1);
+\path (10.8,4.1) node {elbus};
+\path (10.8,-.1) node {htbus};
+\path (1.5,3) node [draw] (gassrc) {gassrc*};
+\path (1.5,2) node [draw, ellipse] (gasbus) {gasbus};
+\draw[->] (gassrc) -- (gasbus);
+\path (0,2) node [draw] (extrb) {extrb};
+\draw[->] (gasbus) -- (extrb);
+\draw[->] (extrb) -- (0,4);
+\draw[->] (extrb) -- (0,0);
+\path (3,2) node [draw] (mchp) {mchp};
+\draw[->] (gasbus) -- (mchp);
+\draw[->] (mchp) -- (3,4);
+\draw[->] (mchp) -- (3,0);
+\path (4,2) node [draw] (htpmp) {htpmp};
+\draw[->] (4,4) -- (htpmp);
+\draw[->] (htpmp) -- (4,0);
+\path (5,2) node [draw] (elboil) {elboil};
+\draw[->] (5,4) -- (elboil);
+\draw[->] (elboil) -- (5,0);
+\path (6.5,1) node [draw] (htstor) {htstor};
+\path (6.5,2) node [draw,ellipse] (lhtbus) {lhtbus};
+\path (8,2) node [draw] (storhtpmp) {storhtpmp};
+\draw[->] (6.5,0) -- (htstor);
+\draw[->] (htstor) -- (lhtbus);
+\draw[->] (lhtbus) -- (storhtpmp);
+\draw[->] (8,4) -- (storhtpmp);
+\draw[->] (storhtpmp) -- (8,0);
+\path (9,1) node [draw] (htsrc) {htsrc};
+\draw[->] (htsrc) -- (9,0);
+\path (10,1) node [draw] (htsnk) {htsnk};
+\draw[->] (10,0) -- (htsnk);
+\path (9,3) node [draw] (elsrc) {elsrc*};
+\draw[->] (elsrc) -- (9,4);
+\path (10,3) node [draw] (elsnk) {elsnk*};
+\draw[->] (10,4) -- (elsnk);
+\path (-.5,-.5) node [label=right:{* marks slack variables with positive costs for gassrc and
+ elsrc and negative costs for elsnk, no other costs}] {};
+\end{tikzpicture}
+
+
 ## First iteration
+
+\begin{alignat*}{2}
+\text{min}& \ &&\sum_t (c^{\text{cost}}_{\text{gas}} \cdot x_{\text{gassrc,gasbus}}(t)
+ + c^{\text{cost}}_{\text{el}} \cdot (x_{\text{elsrc,elbus}}(t) - x_{\text{elbus,elsnk}}(t)))
+\\
+\text{subject to:}&&&\forall \ t \in T
+\\
+\end{alignat*}
+
+\begin{alignat*}{3}
+& x_{\text{extrb,elbus}}(t)
+&& = \quad &&c^{\text{eta,el,noex}}_{\text{extrb}} \cdot x_{\text{gasbus,extrb}}(t)
+ -  \frac{c^{\text{eta,el,noex}}_{\text{extrb}}-c^{\text{eta,el,maxex}}_{\text{extrb}}}
+ {c^{\text{eta,ht,maxex}}_{\text{extrb}}} \cdot x_{\text{extrb,htbus}}(t)
+\\
+& x_{\text{extrb,elbus}}(t)
+&& \geq &&\frac{c^{\text{eta,el,maxex}}_{\text{extrb}}}{c^{\text{eta,ht,maxex}}_{\text{extrb}}}
+ \cdot x_{\text{extrb,htbus}}(t)
+\\
+&x_{\text{mchp,elbus}}(t)
+&& = && (c^{\text{eta,el}}_{\text{mchp}} + c^{\text{eta,ht}}_{\text{mchp}})
+ \cdot x_{\text{gasbus,mchp}}(t) - x_{\text{mchp,htbus}}(t)
+\\
+&x_{\text{mchp,elbus}}(t)
+&& = &&\frac{c^{\text{eta,el}}_{\text{mchp}}}{c^{\text{eta,ht}}_{\text{mchp}}}
+ \cdot x_{\text{mchp,htbus}}(t)
+\\
+&x_{\text{htpmp,htbus}}(t)
+&& = &&c^{\text{cop}}_{\text{htpmp}} \cdot x_{\text{elbus,htpmp}}(t)
+\\
+&x_{\text{elboil,htbus}}(t)
+&& = &&c^{\text{eta}}_{\text{elboil}} \cdot x_{\text{elbus,elboil}}(t)
+\\
+&x^{\text{level}}_{\text{htstor}}(t)
+&& = && x^{\text{level}}_{\text{htstor}}(t-1)
+ + x_{\text{htbus,htstor}}(t)
+ - x_{\text{htstor,lhtbus}}(t)
+\\
+&x_{\text{storhtpmp,htbus}}(t)
+&& = && c^{\text{cop}}_{\text{storhtpmp}} \cdot x_{\text{elbus,storhtpmp}}(t)
+\\
+&x_{\text{storhtpmp,htbus}}(t)
+&& = && x_{\text{lhtbus,storhtpmp}}(t) + x_{\text{elbus,storhtpmp}}(t)
+\\
+&x_{\text{htsrc,htbus}}(t) && \leq && c^{\text{capacity}}_{\text{htsrc}}
+\\
+&x_{\text{htbus,htsnk}}(t) && = && c^{\text{capacity}}_{\text{htsnk}}(t)
+\\
+&\sum_\text{input} x_{\text{input(b),b}}(t) && = && \sum_\text{output} x_{\text{b,output(b)}}(t)
+ \quad \forall \ b \in B
+\\
+\end{alignat*}
 
 ### Parameters
 
