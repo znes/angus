@@ -10,12 +10,14 @@ numbersections: true
 
 # Introduction
 
-For the determination of the plant and storage operation in the case studies,
+For the determination of plant and storage operation in the ANGUS case studies,
 an economic parameter from the fundamental energy system model is used. The model
-is based on the Open Energy Modelling Framework (oemof). The parameter
-is derived from the shadow price as the change in the primal objective when
-relaxing the primal balancing constraint or as value of the dual variable
-associated to the primal balancing constraint:
+is based on the Open Energy Modelling Framework (oemof). It models the german electricity 
+with its electrical neighbours on an hourly basis. The linear programming model is a 
+market simulation model using a perfect foresight approach. 
+The economic parameter is derived from the shadow price which is equal to the dual variable associated 
+with the electricity balancing constraint of the model. The dual variable / shadow price indicates 
+the change in the primal objective when relaxing the primal balancing constraint:
 
 With $n$ producers producing a total amount of $b^*$, each producing amount $x_i$ with specific cost $c_i$:
 
@@ -34,11 +36,16 @@ x_1, ..., x_n & \geq 0\\
 & y_1, ..., y_m \geq  0\\
 \end{align*}
 
-See also Poster "Price theory and storage operation in electricity systems",
+For further background on this economic parameter, see also Poster "Price theory and storage operation in electricity systems",
 Angus 2 Project Meeting, 12 June 2019 in Leipzig.
 
 
 # Case Study CAES
+
+The first case study is the assement of a compressed air energy storage (CAES). In contrast to existing CAES applications with caverns as storage, 
+poros strucutre are investigated. These structure are vastly available for storing energy. Hence, the potential for these (poros) CAES storages is 
+large compared to rather limited cavern potential. To analyse the technical and economic performance of such storage the case study is applied. Results
+are used to assess the role to (p)-CAES storage in the context of a german energy transition with pathyways towards 100% Renewable energy supply.
 
 \begin{tikzpicture}
 \draw
@@ -48,11 +55,13 @@ Angus 2 Project Meeting, 12 June 2019 in Leipzig.
 \draw[->] (bus) -- (storage);
 \end{tikzpicture}
 
+For the development of the interface between the fundamental energy system model
+and the detailed CAES model of WG Tuschy, an iterative process for the model
+formulation was applied.
+
 ## First Iteration
 
-For the development of the interface from the fundamental energy system model
-to the detailed CAES model of WG Tuschy, an iterative process for the model
-formulation was used. In the first step, a linear formulation for a generic storage
+ In the first step, a linear formulation for a generic storage
 was used for the simulation of the operation of the CAES.
 
 ### Parameter
